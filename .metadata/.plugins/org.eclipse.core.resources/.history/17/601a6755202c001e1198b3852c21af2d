@@ -1,0 +1,6 @@
+package com.shopme.admin;
+
+@Controller
+public class MainController {
+
+}
