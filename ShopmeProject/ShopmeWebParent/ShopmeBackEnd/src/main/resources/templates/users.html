@@ -5,12 +5,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
 
-	<title>首頁</title>
+	<title>首頁 - 管理員</title>
 
 	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
 	<script type="text/javascript" th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
 	<script type="text/javascript" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
-
 </head>
 
 <body>
@@ -18,7 +17,7 @@
 		<div>
 			<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
 				<a class="navbar-brand" th:href="@{/}">
-					<img th:src="@{/images/img1.png}" width="25%"/>
+					<img th:src="@{/images/img1.png}" width="25%" />
 				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
 					<span class="navbar-toggler-icon"></span>
@@ -63,8 +62,43 @@
 
 			</nav>
 		</div>
+
 		<div>
-			<h1>首頁</h1>
+			<h1>所有使用者</h1>
+			<a th:href="@{/users/new}">建立使用者</a>
+		</div>
+
+		<div th:if="${message != null}" class="alert alert-success text-center">
+			[[${message}]]
+		</div>
+
+		<div>
+			<table class="table table-responsive-xl table-bordered table-striped table-hover">
+				<thead class="thead-dark">
+					<th>使用者編號</th>
+					<th>使用者圖片</th>
+					<th>使用者信箱</th>
+					<th>使用者姓氏</th>
+					<th>使用者名字</th>
+					<th>使用者權限</th>
+					<th>使用者是否啟用</th>
+					<th></th>
+				</thead>
+				<tbody>
+					<tr th:each="user : ${listUsers}">
+						<td>[[${user.id}]]</td>
+						<td>image</td>
+						<td>[[${user.email}]]</td>
+						<td>[[${user.firstName}]]</td>
+						<td>[[${user.lastName}]]</td>
+						<td>[[${user.roles}]]</td>
+						<td>[[${user.enabled}]]</td>
+						<td>
+							編輯 &nbsp; 刪除
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 		<div class="text-center">
