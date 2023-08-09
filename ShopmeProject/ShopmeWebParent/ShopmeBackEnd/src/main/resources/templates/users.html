@@ -8,6 +8,8 @@
 	<title>首頁 - 管理員</title>
 
 	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
 	<script type="text/javascript" th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
 	<script type="text/javascript" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
 </head>
@@ -87,18 +89,49 @@
 				<tbody>
 					<tr th:each="user : ${listUsers}">
 						<td>[[${user.id}]]</td>
-						<td>image</td>
+						<td>
+							<sapn class="fas fa-portrait fa-3x icon-dark"></sapn>
+						</td>
 						<td>[[${user.email}]]</td>
 						<td>[[${user.firstName}]]</td>
 						<td>[[${user.lastName}]]</td>
 						<td>[[${user.roles}]]</td>
-						<td>[[${user.enabled}]]</td>
+
 						<td>
-							編輯 &nbsp; 刪除
+							<a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green" href=""></a>
+							<a th:if="${user.enabled == false}" class="fas fa-check-circle fa-2x icon-dark" href=""></a>
+						</td>
+
+						<td>
+							<a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/' + ${user.id}}"
+								title="編輯使用者"></a>
+							&nbsp;
+							<a class="fas fa-trash fa-2x icon-dark link-delete"
+								th:href="@{'/users/delete/' + ${user.id}}" th:userId="${user.id}" title="刪除使用者"></a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+		</div>
+
+		<div class="modal fade text-center" id="confirmModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modalTitle">刪除使用者</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<span id="confirmText"></span>
+					</div>
+
+					<div class="modal-footer">
+						<a class="btn btn-success" href="" id="yesButton">確定</a>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div class="text-center">
@@ -106,6 +139,19 @@
 		</div>
 
 	</div>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$(".link-delete").on("click", function (e) {
+				e.preventDefault();
+				link = $(this);
+				//alert($(this).attr("href"));
+				userId = link.attr("userId");
+				$("#yesButton").attr("href", link.attr("href"));
+				$("#confirmText").text("確定要刪除這個使用者ID " + userId + " 嗎?");
+				$("#confirmModal").modal();
+			})
+		});
+	</script>
 </body>
 
 </html>

@@ -5,7 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
 
-	<title>建立使用者</title>
+	<title>[[${pageTitle}]]</title>
 
 	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
 	<script type="text/javascript" th:src="@{/webjars/jquery/3.4.1/jquery.min.js}"></script>
@@ -63,10 +63,14 @@
 			</nav>
 		</div>
 		<div>
-			<h2>建立使用者</h2>
+			<h2>建立使用者 | [[${pageTitle}]]</h2>
 		</div>
 
-		<form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}">
+		<form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}"
+			onsubmit="return checkEmailUnique(this)">
+
+			<input type="hidden" th:field="*{id}">
+
 			<div class="border border-secondary rounded p-3">
 				<div class="form-group row">
 					<label class="col-sm-4 col-form-label">請輸入您的姓氏:</label>
@@ -87,8 +91,11 @@
 				<div class="form-group row">
 					<label class="col-sm-4 col-form-label">請輸入您的密碼:</label>
 					<div class="col-sm-8">
-						<input type="password" class="form-control" th:field="*{password}" required minlength="8"
-							maxlength="20" />
+						<input th:if="${user.id == null}" type="password" class="form-control" th:field="*{password}"
+							required minlength="8" maxlength="20" />
+
+						<input th:if="${user.id != null}" type="password" class="form-control" th:field="*{password}"
+							minlength="8" maxlength="20" />
 					</div>
 				</div>
 
@@ -127,6 +134,25 @@
 			</div>
 		</form>
 
+		<div class="modal fade text-center" id="modalDialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modalTitle">Warning</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<span id="modalBody"></span>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="text-center">
 			<p>E-Commerce Demo &copy; Start 20230720</p>
 		</div>
@@ -138,6 +164,39 @@
 				window.location = "[[@{/users}]]";
 			});
 		});
+
+		function showModalDialog(title, message) {
+			$("#modalTitle").text(title);
+			$("#modalBody").text(message);
+			$("#modalDialog").modal();
+
+		}
+
+		function checkEmailUnique(form) {
+			//			alert("check email unique");
+			url = "[[@{/users/check_email}]]";
+			userEmail = $("#email").val();
+			csrfValue = $("input[name='_csrf']").val();
+			userId = $("#id").val();
+
+			params = {id: userId, email: userEmail, _csrf: csrfValue};
+
+			$.post(url, params, function (response) {
+				if (response == "OK") {
+					form.submit();
+				} else if (response == "Duplicated") {
+					showModalDialog("Warning", "有另一個用戶擁有該電子郵件 " + userEmail);
+				} else {
+					showModalDialog("Error", "來自服務器未知錯誤!!");
+				}
+			}).fail(function () {
+				showModalDialog("Error", "來自服務器連線錯誤!!");
+			});
+
+			return false;
+		}
+
+
 
 	</script>
 </body>
