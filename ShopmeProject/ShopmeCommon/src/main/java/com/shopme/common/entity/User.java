@@ -131,7 +131,7 @@ public class User {
 		if (id == null || photos == null)
 			return "/images/default-user.png";
 
-		return "/user-photos/" + this.id + "/" + this.photos;
+		return "/user-photos/" + this.lastName + "/" + this.photos;
 	}
 
 }

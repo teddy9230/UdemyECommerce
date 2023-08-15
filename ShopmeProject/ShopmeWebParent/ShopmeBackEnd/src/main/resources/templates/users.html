@@ -73,17 +73,39 @@
 		<div th:if="${message != null}" class="alert alert-success text-center">
 			[[${message}]]
 		</div>
+		
+		<div>
+			<form th:action="@{/users/page/1}" class="form-inline m-3">
+				<input type="hidden" name="sortField" th:value="${sortField}">
+				<input type="hidden" name="sortDir" th:value="${sortDir}">
+				
+				<span>搜尋:</span>&nbsp;
+				<input type="search" th:value="${keyword}" name="keyword" class="form-control" required>
+				&nbsp;&nbsp;
+				<input type="submit" value="搜尋" class="btn btn-primary">
+				&nbsp;&nbsp;
+				<input type="button" value="清除" class="btn btn-secondary" onclick="clearFilter()">
+			</form>
+		</div>
 
 		<div>
 			<table class="table table-responsive-xl table-bordered table-striped table-hover">
 				<thead class="thead-dark">
-					<th>使用者編號</th>
+
+					<th th:replace="fragments :: column_link('id', '使用者編號')" />
+
 					<th>使用者圖片</th>
-					<th>使用者信箱</th>
-					<th>使用者姓氏</th>
-					<th>使用者名字</th>
+					
+					<th th:replace="fragments :: column_link('email', '使用者信箱')" />
+					
+					<th th:replace="fragments :: column_link('firstName', '使用者姓氏')" />
+					
+					<th th:replace="fragments :: column_link('lastName', '使用者名字')" />
+
 					<th>使用者權限</th>
-					<th>使用者是否啟用</th>
+					
+					<th th:replace="fragments :: column_link('enabled', '使用者是否啟用')" />
+
 					<th></th>
 				</thead>
 				<tbody>
@@ -117,6 +139,37 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+
+		<div class="text-center mb-1" th:if="${totalItems > 0}">
+			<sapn>顯示所有使用者 # 第 [[${startCount}]] 頁 到 第 [[${endCount}]] 頁 共 [[${totalItems}]] 頁</sapn>
+		</div>
+
+		<div class="text-center mb-1" th:unless="${totalItems > 0}">
+			<sapn>找不到使用者</sapn>
+		</div>
+
+		<div th:if="${totalPages > 1}">
+			<nav>
+				<ul class="pagination justify-content-center">
+					<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+						<a th:replace="fragments :: page_link(1,'第一頁')"></a>
+					</li>
+					<li th:class="${currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+						<a th:replace="fragments :: page_link(${currentPage - 1}, '上一頁')"></a>
+					</li>
+					<li th:class="${currentPage != i ? 'page-item' : 'page-item active'}"
+						th:each="i : ${#numbers.sequence(1, totalPages)}">
+						<a th:replace="fragments :: page_link(${i}, ${i})"></a>
+					</li>
+					<li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+						<a th:replace="fragments :: page_link(${currentPage + 1}, '下一頁')"></a>
+					</li>
+					<li th:class="${currentPage < totalPages ? 'page-item' : 'page-item disabled'}">
+						<a th:replace="fragments :: page_link(${totalPages}, '最後一頁')"></a>
+					</li>
+				</ul>
+			</nav>
 		</div>
 
 		<div class="modal fade text-center" id="confirmModal">
@@ -156,6 +209,10 @@
 				$("#confirmModal").modal();
 			})
 		});
+		
+		function clearFilter(){
+			window.location = "[[@{/users}]]";
+		}
 	</script>
 </body>
 
