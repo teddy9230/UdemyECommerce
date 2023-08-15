@@ -32,7 +32,7 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 
 	public List<User> listAll() {
-		Sort sort = Sort.by(Sort.Order.asc("id"));
+		Sort sort = Sort.by("id").ascending();
 
 		return (List<User>) userRepo.findAll(sort);
 	}
