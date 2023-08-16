@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0">
+
+	<title>會員登入 - 登入頁面</title>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" />
+</head>
+
+<body>
+	<div class="container-fluid text-center">
+		<div>
+			<img th:src="@{images/ShopmeAdminBig.png}">
+		</div>
+
+		<form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto">
+			<div th:if="${param.error}">
+				<p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+			</div>
+			<div class="border border-secondary rounded p-3">
+				<h1>會員登入</h1>
+				<p>
+					<input type="email" name="email" class="form-control" placeholder="請輸入信箱" required />
+				</p>
+				<p>
+					<input type="password" name="password" class="form-control" placeholder="請輸入密碼" required />
+				</p>
+				<p>
+					<input type="submit" value="Login" class="btn btn-primary" />
+				</p>
+			</div>
+		</form>
+
+		<div class="text-center mt-3">
+			<p>E-Commerce Demo &copy; Start 20230720</p>
+		</div>
+	</div>
+
+</body>
+
+</html>
