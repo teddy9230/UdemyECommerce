@@ -1,6 +1,5 @@
 package com.shopme.admin.security;
 
-import org.antlr.v4.runtime.atn.SemanticContext.AND;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
