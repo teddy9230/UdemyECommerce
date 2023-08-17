@@ -20,6 +20,11 @@
 			<div th:if="${param.error}">
 				<p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
 			</div>
+			
+			<div th:if="${param.logout}">
+				<p class="text-warning">您已登出 請重新登入.</p>
+			</div>
+			
 			<div class="border border-secondary rounded p-3">
 				<h1>會員登入</h1>
 				<p>

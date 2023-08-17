@@ -1,5 +1,6 @@
 package com.shopme.admin.security;
 
+import org.antlr.v4.runtime.atn.SemanticContext.AND;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,40 +20,32 @@ public class WebSecurityConfig {
 	UserDetailsService userDetailsService() {
 		return new ShopmeUserDetailsService();
 	}
-	
+
 	@Bean
-	PasswordEncoder PasswordEncoder() {
+	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	public DaoAuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService());
-		authProvider.setPasswordEncoder(PasswordEncoder());
-		
+		authProvider.setPasswordEncoder(passwordEncoder());
+
 		return authProvider;
-		
 	}
-	
-	
+
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider());
 	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(authorizeRequests ->
-        authorizeRequests
-            .requestMatchers("/images/**", "/js/**", "/webjars/**").permitAll()
-            .anyRequest().authenticated())
-        .formLogin(formLogin -> formLogin
-            .loginPage("/login")
-            .usernameParameter("email")
-            .permitAll());
+		http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+				.requestMatchers("/images/**", "/js/**", "/webjars/**").permitAll().anyRequest().authenticated())
+				.formLogin(formLogin -> formLogin.loginPage("/login").usernameParameter("email").permitAll())
+				.logout(logout -> logout.logoutUrl("/logout").permitAll());
 
 		return http.build();
 	}
-	
-	
 
 }
